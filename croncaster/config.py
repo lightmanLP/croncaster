@@ -54,9 +54,13 @@ class Config(Model, metaclass=ConfigMeta):
     @property
     def max(self) -> int:
         nums = tuple(i.step for i in Config().tasks)
-        x = functools.reduce(lambda x, y: x * y, nums) // math.gcd(*nums)
-        # print(x)
-        return x
+        if len(nums) == 1:
+            return nums[0]
+        else:
+            return (
+                functools.reduce(lambda x, y: x * y, nums)
+                // math.gcd(*nums)
+            )
 
     @classmethod
     def from_dump(cls, dump: dict | Path | str) -> "Self":

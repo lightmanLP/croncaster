@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "croncaster"
-version = "0.0.1"
+version = "0.0.2"
 description = "cached shell command caster based on rotating state machine"
 authors = ["lightmanLP <liteman1000@gmail.com>"]
 license = "MIT"
