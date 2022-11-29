@@ -1,6 +1,7 @@
 from typing import Final
 from multiprocessing.pool import ThreadPool
 import subprocess
+import platform
 
 from .config import Config
 from .state import State
@@ -14,11 +15,16 @@ def run():
 
     for cast in Config().tasks:
         if state % cast.step == 0:
+            match platform.system().upper():
+                case "WINDOWS":
+                    command = ("cmd", "/c", cast.command)
+                case "LINUX":
+                    command = ("bash", "-c", cast.command)
+                case _:
+                    raise AssertionError()
             pool.apply_async(
                 subprocess.call,
-                (
-                    ("cmd", "/c", cast.command),
-                )
+                (command, )
             )
 
     if state >= Config().max:
