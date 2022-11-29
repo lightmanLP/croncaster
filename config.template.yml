@@ -1,0 +1,8 @@
+cache_path: "./croncaster.cache"
+tasks:
+- step: 1
+  command: echo 1
+- step: 2
+  command: echo 2
+- step: 3
+  command: echo 3
