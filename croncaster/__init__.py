@@ -21,7 +21,7 @@ def run():
                 case "LINUX":
                     command = ("bash", "-c", cast.command)
                 case _:
-                    raise AssertionError()
+                    raise NotImplementedError()
             pool.apply_async(
                 subprocess.call,
                 (command, )

@@ -6,6 +6,7 @@ import io
 
 from pydantic import BaseModel, Extra, Field
 from pydantic.main import ModelMetaclass
+from pydantic.error_wrappers import ValidationError
 from yamt import SingletonMeta
 import yaml
 
@@ -46,7 +47,7 @@ class Config(Model, metaclass=ConfigMeta):
             case None:
                 cache_path = Path.cwd() / "croncaster.cache"
             case _:
-                raise AssertionError()
+                raise ValidationError()
         cache_path.touch(exist_ok=True)
         kwargs["cache_path"] = cache_path
         super().__init__(**kwargs)
