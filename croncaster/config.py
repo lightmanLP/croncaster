@@ -13,7 +13,6 @@ import yaml
 if TYPE_CHECKING:
     from typing_extensions import Self
 
-config: "Config"
 T = TypeVar("T")
 
 
