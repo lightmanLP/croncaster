@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, TypeVar, overload
+from typing import TYPE_CHECKING, TypeVar, Any, overload
 from pathlib import Path
 import functools
 import math
@@ -14,6 +14,15 @@ if TYPE_CHECKING:
     from typing_extensions import Self
 
 T = TypeVar("T")
+
+
+class CustomLoader(yaml.FullLoader):
+    def include(self, node: yaml.ScalarNode) -> Any:
+        with open(self.construct_scalar(node), encoding="UTF-8") as file:
+            return yaml.load(file, self.__class__)
+
+
+CustomLoader.add_constructor("!include", CustomLoader.include)
 
 
 class ConfigMeta(ModelMetaclass, SingletonMeta):
@@ -83,10 +92,10 @@ class Config(Model, metaclass=ConfigMeta):
         match dump:
             case Path():
                 assert dump.exists() and dump.is_file()
-                with open(dump, "r", encoding="UTF8") as file:
-                    return yaml.load(file, yaml.FullLoader) or dict()
+                with open(dump, "r", encoding="UTF-8") as file:
+                    return yaml.load(file, CustomLoader) or dict()
             case str():
-                return yaml.load(io.StringIO(dump), yaml.FullLoader) or dict()
+                return yaml.load(io.StringIO(dump), CustomLoader) or dict()
             case _:
                 return dump
 
