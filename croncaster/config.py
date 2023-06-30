@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, TypeVar, Any, overload
+from typing import TYPE_CHECKING, TypeVar, Iterator, Any, overload
 from pathlib import Path
 import functools
 import math
@@ -42,9 +42,15 @@ class Cast(Model):
 
 
 class Config(Model, metaclass=ConfigMeta):
+    class Config:
+        allow_population_by_field_name = True
+
     cache_path: Path
     thread_pool_size: int = Field(5)
-    tasks: tuple[Cast, ...] = Field(default_factory=tuple)
+    unresolved_tasks: tuple[Cast | tuple[Cast, ...], ...] = Field(
+        default_factory=tuple,
+        alias="tasks"
+    )
 
     def __init__(self, **kwargs) -> None:
         cache_path = kwargs.get("cache_path")
@@ -60,6 +66,14 @@ class Config(Model, metaclass=ConfigMeta):
         cache_path.touch(exist_ok=True)
         kwargs["cache_path"] = cache_path.resolve()
         super().__init__(**kwargs)
+
+    @property
+    def tasks(self) -> Iterator[Cast]:
+        for i in self.unresolved_tasks:
+            if isinstance(i, tuple):
+                yield from i
+            else:
+                yield i
 
     @property
     def max(self) -> int:
