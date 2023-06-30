@@ -1,4 +1,5 @@
 cache_path: "./croncaster.cache"
+thread_pool_size: 5
 tasks:
 - step: 1
   command: echo 1

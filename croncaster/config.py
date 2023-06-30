@@ -34,6 +34,7 @@ class Cast(Model):
 
 class Config(Model, metaclass=ConfigMeta):
     cache_path: Path
+    thread_pool_size: int = Field(5)
     tasks: tuple[Cast, ...] = Field(default_factory=tuple)
 
     def __init__(self, **kwargs) -> None:
@@ -88,3 +89,7 @@ class Config(Model, metaclass=ConfigMeta):
                 return yaml.load(io.StringIO(dump), yaml.FullLoader) or dict()
             case _:
                 return dump
+
+    @classmethod
+    def wipe(cls):
+        cls._wipe_singleton()
