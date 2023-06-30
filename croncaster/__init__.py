@@ -1,4 +1,4 @@
-from multiprocessing.pool import ThreadPool
+from multiprocessing.pool import Pool
 import subprocess
 import platform
 import importlib.metadata
@@ -16,7 +16,7 @@ except importlib.metadata.PackageNotFoundError:
 def run():
     cfg = Config()
     state = State().get()
-    pool = ThreadPool(cfg.thread_pool_size)
+    pool = Pool(cfg.thread_pool_size)
 
     for cast in cfg.tasks:
         if state % cast.step == 0:
