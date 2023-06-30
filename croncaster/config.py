@@ -49,7 +49,7 @@ class Config(Model, metaclass=ConfigMeta):
             case _:
                 raise ValidationError()
         cache_path.touch(exist_ok=True)
-        kwargs["cache_path"] = cache_path
+        kwargs["cache_path"] = cache_path.resolve()
         super().__init__(**kwargs)
 
     @property
