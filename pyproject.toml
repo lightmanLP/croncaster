@@ -5,6 +5,10 @@ description = "cached shell command caster based on rotating state machine"
 authors = ["lightmanLP <liteman1000@gmail.com>"]
 license = "MIT"
 readme = "README.md"
+keywords = ["cron", "crontab", "timer"]
+
+[tool.poetry.urls]
+"Github" = "https://github.com/lightmanLP/croncaster"
 
 [tool.poetry.dependencies]
 python = "^3.10"
